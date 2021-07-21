@@ -1,0 +1,12 @@
+{
+  "commit": {
+    "commit": "e20ce8a5f62d8586c616a3e56799d04e321d1f00",
+    "author": "Stefan Widgren <stefan.widgren@gmail.com>",
+    "time": "2021-07-21 07:53:22",
+    "files": 1,
+    "merge": false,
+    "message": "Update configure script\n"
+  },
+  "remote": "https://github.com/ropensci/git2r",
+  "pkg": "git2r"
+}
