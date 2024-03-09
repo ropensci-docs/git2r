@@ -1,0 +1,12 @@
+{
+  "commit": {
+    "commit": "a465c2d35113f21d1197690e2ca1104a695f542e",
+    "author": "Stefan Widgren <stefan.widgren@gmail.com>",
+    "time": "2023-11-29 06:21:37",
+    "files": 447,
+    "merge": false,
+    "message": "Drop bundled libgit2 (#463)\n\n* Drop the bundled libgit2 source code\r\n\r\n* github-action: run on all branches\r\n\r\n* Update build configuration script\r\n\r\n* Remove unused 'src/Makevars_libgit2.in'\r\n\r\n* Update cleanup script\r\n\r\n* Remove outdated CONTRIBUTING.md\r\n\r\n* Remove unused figure/git2r-design.png\r\n\r\n* Update README\r\n\r\n* Remove unused patches"
+  },
+  "repo": "https://github.com/ropensci/git2r",
+  "pkg": "git2r"
+}
