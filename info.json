@@ -1,0 +1,12 @@
+{
+  "commit": {
+    "commit": "055bcfb2d433cb81043528326a9f67a4c6687a0d",
+    "author": "Stefan Widgren <stefan.widgren@gmail.com>",
+    "time": "2024-10-17 06:17:02",
+    "files": 1,
+    "merge": false,
+    "message": "Update NEWS\n"
+  },
+  "repo": "https://github.com/ropensci/git2r",
+  "pkg": "git2r"
+}
