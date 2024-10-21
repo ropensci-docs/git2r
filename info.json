@@ -1,0 +1,12 @@
+{
+  "commit": {
+    "commit": "ceda34c3ca4022d8b6a377e0a1fa24fdc7d1e624",
+    "author": "Stefan Widgren <stefan.widgren@gmail.com>",
+    "time": "2024-10-21 05:25:36",
+    "files": 2,
+    "merge": false,
+    "message": "Bump version to 0.35.0.9000 for development\n"
+  },
+  "repo": "https://github.com/ropensci/git2r",
+  "pkg": "git2r"
+}
