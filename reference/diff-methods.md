@@ -1,0 +1,194 @@
+# Changes between commits, trees, working tree, etc.
+
+Changes between commits, trees, working tree, etc.
+
+## Usage
+
+``` r
+# S3 method for class 'git_repository'
+diff(
+  x,
+  index = FALSE,
+  as_char = FALSE,
+  filename = NULL,
+  context_lines = 3,
+  interhunk_lines = 0,
+  old_prefix = "a",
+  new_prefix = "b",
+  id_abbrev = NULL,
+  path = NULL,
+  max_size = NULL,
+  ...
+)
+
+# S3 method for class 'git_tree'
+diff(
+  x,
+  new_tree = NULL,
+  index = FALSE,
+  as_char = FALSE,
+  filename = NULL,
+  context_lines = 3,
+  interhunk_lines = 0,
+  old_prefix = "a",
+  new_prefix = "b",
+  id_abbrev = NULL,
+  path = NULL,
+  max_size = NULL,
+  ...
+)
+```
+
+## Arguments
+
+- x:
+
+  A `git_repository` object or the old `git_tree` object to compare to.
+
+- index:
+
+  *When object equals a git_repository*
+
+  :   Whether to compare the index to HEAD. If FALSE (the default), then
+      the working tree is compared to the index.
+
+  *When object equals a git_tree*
+
+  :   Whether to use the working directory (by default), or the index
+      (if set to TRUE) in the comparison to `object`.
+
+- as_char:
+
+  logical: should the result be converted to a character string?.
+  Default is FALSE.
+
+- filename:
+
+  If as_char is TRUE, then the diff can be written to a file with name
+  filename (the file is overwritten if it exists). Default is NULL.
+
+- context_lines:
+
+  The number of unchanged lines that define the boundary of a hunk (and
+  to display before and after). Defaults to 3.
+
+- interhunk_lines:
+
+  The maximum number of unchanged lines between hunk boundaries before
+  the hunks will be merged into one. Defaults to 0.
+
+- old_prefix:
+
+  The virtual "directory" prefix for old file names in hunk headers.
+  Default is "a".
+
+- new_prefix:
+
+  The virtual "directory" prefix for new file names in hunk headers.
+  Defaults to "b".
+
+- id_abbrev:
+
+  The abbreviation length to use when formatting object ids. Defaults to
+  the value of 'core.abbrev' from the config, or 7 if NULL.
+
+- path:
+
+  A character vector of paths / fnmatch patterns to constrain diff.
+  Default is NULL which include all paths.
+
+- max_size:
+
+  A size (in bytes) above which a blob will be marked as binary
+  automatically; pass a negative value to disable. Defaults to 512MB
+  when max_size is NULL.
+
+- ...:
+
+  Not used.
+
+- new_tree:
+
+  The new git_tree object to compare, or NULL. If NULL, then we use the
+  working directory or the index (see the `index` argument).
+
+## Value
+
+A `git_diff` object if as_char is FALSE. If as_char is TRUE and filename
+is NULL, a character string, else NULL.
+
+## Line endings
+
+Different operating systems handle line endings differently. Windows
+uses both a carriage-return character and a linefeed character to
+represent a newline in a file. While Linux and macOS use only the
+linefeed character for a newline in a file. To avoid problems in your
+diffs, you can configure Git to properly handle line endings using the
+`core.autocrlf` setting in the Git config file, see the Git
+documentation (<https://git-scm.com/>).
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+## Initialize a repository
+path <- tempfile(pattern="git2r-")
+dir.create(path)
+repo <- init(path)
+
+## Config user
+config(repo, user.name = "Alice", user.email = "alice@example.org")
+
+## Create a file, add, commit
+writeLines("Hello world!", file.path(path, "test.txt"))
+add(repo, "test.txt")
+commit(repo, "Commit message")
+
+## Change the file
+writeLines(c("Hello again!", "Here is a second line", "And a third"),
+           file.path(path, "test.txt"))
+
+## diff between index and workdir
+diff_1 <- diff(repo)
+summary(diff_1)
+cat(diff(repo, as_char=TRUE))
+
+## Diff between index and HEAD is empty
+diff_2 <- diff(repo, index=TRUE)
+summary(diff_2)
+cat(diff(repo, index=TRUE, as_char=TRUE))
+
+## Diff between tree and working dir, same as diff_1
+diff_3 <- diff(tree(commits(repo)[[1]]))
+summary(diff_3)
+cat(diff(tree(commits(repo)[[1]]), as_char=TRUE))
+
+## Add changes, diff between index and HEAD is the same as diff_1
+add(repo, "test.txt")
+diff_4 <- diff(repo, index=TRUE)
+summary(diff_4)
+cat(diff(repo, index=TRUE, as_char=TRUE))
+
+## Diff between tree and index
+diff_5 <- diff(tree(commits(repo)[[1]]), index=TRUE)
+summary(diff_5)
+cat(diff(tree(commits(repo)[[1]]), index=TRUE, as_char=TRUE))
+
+## Diff between two trees
+commit(repo, "Second commit")
+tree_1 <- tree(commits(repo)[[2]])
+tree_2 <- tree(commits(repo)[[1]])
+diff_6 <- diff(tree_1, tree_2)
+summary(diff_6)
+cat(diff(tree_1, tree_2, as_char=TRUE))
+
+## Binary files
+set.seed(42)
+writeBin(as.raw((sample(0:255, 1000, replace=TRUE))),
+         con=file.path(path, "test.bin"))
+add(repo, "test.bin")
+diff_7 <- diff(repo, index=TRUE)
+summary(diff_7)
+cat(diff(repo, index=TRUE, as_char=TRUE))
+} # }
+```

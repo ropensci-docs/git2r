@@ -1,0 +1,118 @@
+# Checkout
+
+Update files in the index and working tree to match the content of the
+tree pointed at by the treeish object (commit, tag or tree). The default
+checkout strategy (`force = FALSE`) will only make modifications that
+will not lose changes. Use `force = TRUE` to force working directory to
+look like index.
+
+## Usage
+
+``` r
+checkout(
+  object = NULL,
+  branch = NULL,
+  create = FALSE,
+  force = FALSE,
+  path = NULL,
+  ...
+)
+```
+
+## Arguments
+
+- object:
+
+  A path to a repository, or a `git_repository` object, or a
+  `git_commit` object, or a `git_tag` object, or a `git_tree` object.
+
+- branch:
+
+  name of the branch to check out. Only used if object is a path to a
+  repository or a `git_repository` object.
+
+- create:
+
+  create branch if it doesn't exist. Only used if object is a path to a
+  repository or a `git_repository` object.
+
+- force:
+
+  If `TRUE`, then make working directory match target. This will throw
+  away local changes. Default is `FALSE`.
+
+- path:
+
+  Limit the checkout operation to only certain paths. This argument is
+  only used if branch is NULL. Default is `NULL`.
+
+- ...:
+
+  Additional arguments. Not used.
+
+## Value
+
+invisible NULL
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+## Create directories and initialize repositories
+path_bare <- tempfile(pattern="git2r-")
+path_repo_1 <- tempfile(pattern="git2r-")
+path_repo_2 <- tempfile(pattern="git2r-")
+dir.create(path_bare)
+dir.create(path_repo_1)
+dir.create(path_repo_2)
+repo_bare <- init(path_bare, bare = TRUE)
+
+## Clone to repo 1 and config user
+repo_1 <- clone(path_bare, path_repo_1)
+config(repo_1, user.name = "Alice", user.email = "alice@example.org")
+
+## Add changes to repo 1 and push to bare
+lines <- "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do"
+writeLines(lines, file.path(path_repo_1, "test.txt"))
+add(repo_1, "test.txt")
+commit(repo_1, "First commit message")
+push(repo_1, "origin", "refs/heads/master")
+
+## Create and checkout 'dev' branch in repo 1
+checkout(repo_1, "dev", create = TRUE)
+
+## Add changes to 'dev' branch in repo 1 and push to bare
+lines <- c(
+  "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do",
+  "eiusmod tempor incididunt ut labore et dolore magna aliqua.")
+writeLines(lines, file.path(path_repo_1, "test.txt"))
+add(repo_1, "test.txt")
+commit(repo_1, "Second commit message")
+push(repo_1, "origin", "refs/heads/dev")
+
+## Clone to repo 2
+repo_2 <- clone(path_bare, path_repo_2)
+config(repo_2, user.name = "Bob", user.email = "bob@example.org")
+
+## Read content of 'test.txt'
+readLines(file.path(path_repo_2, "test.txt"))
+
+## Checkout dev branch
+checkout(repo_2, "dev")
+
+## Read content of 'test.txt'
+readLines(file.path(path_repo_2, "test.txt"))
+
+## Edit "test.txt" in repo_2
+writeLines("Hello world!", con = file.path(path_repo_2, "test.txt"))
+
+## Check status
+status(repo_2)
+
+## Checkout "test.txt"
+checkout(repo_2, path = "test.txt")
+
+## Check status
+status(repo_2)
+} # }
+```

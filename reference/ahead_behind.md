@@ -1,0 +1,59 @@
+# Ahead Behind
+
+Count the number of unique commits between two commit objects.
+
+## Usage
+
+``` r
+ahead_behind(local = NULL, upstream = NULL)
+```
+
+## Arguments
+
+- local:
+
+  a git_commit object. Can also be a tag or a branch, and in that case
+  the commit will be the target of the tag or branch.
+
+- upstream:
+
+  a git_commit object. Can also be a tag or a branch, and in that case
+  the commit will be the target of the tag or branch.
+
+## Value
+
+An integer vector of length 2 with number of commits that the upstream
+commit is ahead and behind the local commit
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+## Create a directory in tempdir
+path <- tempfile(pattern="git2r-")
+dir.create(path)
+
+## Initialize a repository
+repo <- init(path)
+config(repo, user.name = "Alice", user.email = "alice@example.org")
+
+## Create a file, add and commit
+lines <- "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do"
+writeLines(lines, file.path(path, "test.txt"))
+add(repo, "test.txt")
+commit_1 <- commit(repo, "Commit message 1")
+tag_1 <- tag(repo, "Tagname1", "Tag message 1")
+
+# Change file and commit
+lines <- c(
+  "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do",
+  "eiusmod tempor incididunt ut labore et dolore magna aliqua.")
+writeLines(lines, file.path(path, "test.txt"))
+add(repo, "test.txt")
+commit_2 <- commit(repo, "Commit message 2")
+tag_2 <- tag(repo, "Tagname2", "Tag message 2")
+
+ahead_behind(commit_1, commit_2)
+ahead_behind(tag_1, tag_2)
+} # }
+```

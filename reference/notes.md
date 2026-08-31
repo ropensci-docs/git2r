@@ -1,0 +1,66 @@
+# List notes
+
+List all the notes within a specified namespace.
+
+## Usage
+
+``` r
+notes(repo = ".", ref = NULL)
+```
+
+## Arguments
+
+- repo:
+
+  a path to a repository or a `git_repository` object. Default is '.'
+
+- ref:
+
+  Reference to read from. Default (ref = NULL) is to call
+  `note_default_ref`.
+
+## Value
+
+list with git_note objects
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+## Create and initialize a repository in a temporary directory
+path <- tempfile(pattern="git2r-")
+dir.create(path)
+repo <- init(path)
+config(repo, user.name = "Alice", user.email = "alice@example.org")
+
+## Create a file, add and commit
+writeLines("Hello world!", file.path(path, "example.txt"))
+add(repo, "example.txt")
+commit_1 <- commit(repo, "Commit message 1")
+
+## Create another commit
+writeLines(c("Hello world!",
+             "HELLO WORLD!"),
+           file.path(path, "example.txt"))
+add(repo, "example.txt")
+commit_2 <- commit(repo, "Commit message 2")
+
+## Create note in default namespace
+note_create(commit_1, "Note-1")
+note_create(commit_1, "Note-2", force = TRUE)
+
+## Create note in named (review) namespace
+note_create(commit_1, "Note-3", ref="refs/notes/review")
+note_create(commit_2, "Note-4", ref="review")
+
+## Create note on blob and tree
+note_create(tree(commit_1), "Note-5")
+note_create(tree(commit_1)["example.txt"], "Note-6")
+
+## List notes in default namespace
+notes(repo)
+
+## List notes in 'review' namespace
+notes(repo, "review")
+} # }
+```

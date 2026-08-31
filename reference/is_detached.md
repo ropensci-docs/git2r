@@ -1,0 +1,54 @@
+# Check if HEAD of repository is detached
+
+Check if HEAD of repository is detached
+
+## Usage
+
+``` r
+is_detached(repo = ".")
+```
+
+## Arguments
+
+- repo:
+
+  a path to a repository or a `git_repository` object. Default is '.'
+
+## Value
+
+`TRUE` if repository HEAD is detached, else `FALSE`.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+## Create and initialize a repository in a temporary directory
+path <- tempfile(pattern="git2r-")
+dir.create(path)
+repo <- init(path)
+config(repo, user.name = "Alice", user.email = "alice@example.org")
+
+## Create a file, add and commit
+lines <- "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do"
+writeLines(lines, file.path(path, "example.txt"))
+add(repo, "example.txt")
+commit_1 <- commit(repo, "Commit message 1")
+
+## Change file, add and commit
+lines <- c(
+  "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do",
+  "eiusmod tempor incididunt ut labore et dolore magna aliqua.")
+writeLines(lines, file.path(path, "example.txt"))
+add(repo, "example.txt")
+commit(repo, "Commit message 2")
+
+## HEAD of repository is not detached
+is_detached(repo)
+
+## Checkout first commit
+checkout(commit_1)
+
+## HEAD of repository is detached
+is_detached(repo)
+} # }
+```

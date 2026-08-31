@@ -1,0 +1,13 @@
+{
+  "commit": {
+    "commit": "5dd3d5270beb7072d5411935ddc4ff203ea2d6b8",
+    "author": "Stefan Widgren <stefan.widgren@gmail.com>",
+    "time": "2026-02-22T19:05:40Z",
+    "files": 4,
+    "merge": false,
+    "message": "Add casts to avoid compiler warnings\n"
+  },
+  "repo": "https://github.com/ropensci/git2r",
+  "pkg": "git2r",
+  "time": "2026-08-31T10:09:59Z"
+}
