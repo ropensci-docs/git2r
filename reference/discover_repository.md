@@ -1,0 +1,65 @@
+# Find path to repository for any file
+
+Find path to repository for any file
+
+## Usage
+
+``` r
+discover_repository(path = ".", ceiling = NULL)
+```
+
+## Arguments
+
+- path:
+
+  A character vector specifying the path to a file or folder
+
+- ceiling:
+
+  The default is to not use the ceiling argument and start the lookup
+  from path and walk across parent directories. When ceiling is 0, the
+  lookup is only in path. When ceiling is 1, the lookup is in both the
+  path and the parent to path.
+
+## Value
+
+Character vector with path (terminated by a file separator) to
+repository or NULL if this cannot be established.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+## Initialize a temporary repository
+path <- tempfile(pattern="git2r-")
+dir.create(path)
+repo <- init(path)
+
+## Create a user and commit a file
+config(repo, user.name = "Alice", user.email = "alice@example.org")
+lines <- "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do"
+writeLines(lines, file.path(path, "example-1.txt"))
+add(repo, "example-1.txt")
+commit(repo, "First commit message")
+
+## Create a second file. The file is not added for version control
+## in the repository.
+dir.create(file.path(path, "example"))
+file_2 <- file.path(path, "example/example-2.txt")
+writeLines("Not under version control", file_2)
+
+## Find the path to the repository using the path to the second file
+discover_repository(file_2)
+
+## Demonstrate the 'ceiling' argument
+wd <- workdir(repo)
+dir.create(file.path(wd, "temp"))
+
+## Lookup repository in 'file.path(wd, "temp")'. Should return NULL
+discover_repository(file.path(wd, "temp"), ceiling = 0)
+
+## Lookup repository in parent to 'file.path(wd, "temp")'.
+## Should not return NULL
+discover_repository(file.path(wd, "temp"), ceiling = 1)
+} # }
+```

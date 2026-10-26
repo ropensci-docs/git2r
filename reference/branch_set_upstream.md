@@ -1,0 +1,60 @@
+# Set remote tracking branch
+
+Set the upstream configuration for a given local branch
+
+## Usage
+
+``` r
+branch_set_upstream(branch = NULL, name)
+```
+
+## Arguments
+
+- branch:
+
+  The branch to configure
+
+- name:
+
+  remote-tracking or local branch to set as upstream. Pass NULL to
+  unset.
+
+## Value
+
+invisible NULL
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+## Initialize two temporary repositories
+path_bare <- tempfile(pattern="git2r-")
+path_repo <- tempfile(pattern="git2r-")
+dir.create(path_bare)
+dir.create(path_repo)
+repo_bare <- init(path_bare, bare = TRUE)
+repo <- clone(path_bare, path_repo)
+
+## Config user and commit a file
+config(repo, user.name = "Alice", user.email = "alice@example.org")
+
+## Write to a file and commit
+lines <- "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do"
+writeLines(lines, file.path(path_repo, "example.txt"))
+add(repo, "example.txt")
+commit(repo, "First commit message")
+
+## Push commits from repository to bare repository
+## Adds an upstream tracking branch to branch 'master'
+push(repo, "origin", "refs/heads/master")
+
+## Unset remote remote tracking branch
+branch_get_upstream(repository_head(repo))
+branch_set_upstream(repository_head(repo), NULL)
+branch_get_upstream(repository_head(repo))
+
+## Set remote tracking branch
+branch_set_upstream(repository_head(repo), "origin/master")
+branch_get_upstream(repository_head(repo))
+} # }
+```

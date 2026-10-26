@@ -1,0 +1,127 @@
+# Fetch new data and update tips
+
+Fetch new data and update tips
+
+## Usage
+
+``` r
+fetch(
+  repo = ".",
+  name = NULL,
+  credentials = NULL,
+  verbose = TRUE,
+  refspec = NULL,
+  proxy = NULL
+)
+```
+
+## Arguments
+
+- repo:
+
+  a path to a repository or a `git_repository` object. Default is '.'
+
+- name:
+
+  the remote's name
+
+- credentials:
+
+  The credentials for remote repository access. Default is NULL. To use
+  and query an ssh-agent for the ssh key credentials, let this parameter
+  be NULL (the default).
+
+- verbose:
+
+  Print information each time a reference is updated locally. Default is
+  `TRUE`.
+
+- refspec:
+
+  The refs to fetch and which local refs to update, see examples. Pass
+  NULL to use the `remote.<repository>.fetch` variable. Default is
+  `NULL`.
+
+- proxy:
+
+  Either `NULL` (the default) to disable proxy usage, `TRUE` for
+  automatic proxy detection, or a character string with a proxy URL (for
+  example, `"http://proxy.example.org:3128"`).
+
+## Value
+
+invisible list of class `git_transfer_progress` with statistics from the
+fetch operation:
+
+- total_objects:
+
+  Number of objects in the packfile being downloaded
+
+- indexed_objects:
+
+  Received objects that have been hashed
+
+- received_objects:
+
+  Objects which have been downloaded
+
+- total_deltas:
+
+  Total number of deltas in the pack
+
+- indexed_deltas:
+
+  Deltas which have been indexed
+
+- local_objects:
+
+  Locally-available objects that have been injected in order to fix a
+  thin pack
+
+- received_bytes:
+
+  Size of the packfile received up to now
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+## Initialize three temporary repositories
+path_bare <- tempfile(pattern="git2r-")
+path_repo_1 <- tempfile(pattern="git2r-")
+path_repo_2 <- tempfile(pattern="git2r-")
+
+dir.create(path_bare)
+dir.create(path_repo_1)
+dir.create(path_repo_2)
+
+bare_repo <- init(path_bare, bare = TRUE)
+repo_1 <- clone(path_bare, path_repo_1)
+repo_2 <- clone(path_bare, path_repo_2)
+
+config(repo_1, user.name = "Alice", user.email = "alice@example.org")
+config(repo_2, user.name = "Bob", user.email = "bob@example.org")
+
+## Add changes to repo 1
+writeLines("Lorem ipsum dolor sit amet",
+           con = file.path(path_repo_1, "example.txt"))
+add(repo_1, "example.txt")
+commit(repo_1, "Commit message")
+
+## Push changes from repo 1 to origin (bare_repo)
+push(repo_1, "origin", "refs/heads/master")
+
+## Fetch changes from origin (bare_repo) to repo 2
+fetch(repo_2, "origin")
+
+## List updated heads
+fetch_heads(repo_2)
+
+## Checking out GitHub pull requests locally
+path <- tempfile(pattern="ghit-")
+repo <- clone("https://github.com/leeper/ghit", path)
+fetch(repo, "origin", refspec = "pull/13/head:refs/heads/BRANCHNAME")
+checkout(repo, "BRANCHNAME")
+summary(repo)
+} # }
+```

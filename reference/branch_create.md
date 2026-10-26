@@ -1,0 +1,62 @@
+# Create a branch
+
+Create a branch
+
+## Usage
+
+``` r
+branch_create(commit = last_commit(), name = NULL, force = FALSE)
+```
+
+## Arguments
+
+- commit:
+
+  Commit to which the branch should point. The default is to use the
+  [`last_commit()`](https://docs.ropensci.org/git2r/reference/last_commit.md)
+  function to determine the commit to which the branch should point.
+
+- name:
+
+  Name for the branch
+
+- force:
+
+  Overwrite existing branch. Default = FALSE
+
+## Value
+
+invisible git_branch object
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+## Initialize a temporary repository
+path <- tempfile(pattern="git2r-")
+dir.create(path)
+repo <- init(path)
+
+## Create a user and commit a file
+config(repo, user.name = "Alice", user.email = "alice@example.org")
+lines <- "Hello world!"
+writeLines(lines, file.path(path, "example.txt"))
+add(repo, "example.txt")
+commit_1 <- commit(repo, "First commit message")
+
+## Create a branch
+branch_1 <- branch_create(commit_1, name = "test-branch")
+
+## Add one more commit
+lines <- c("Hello world!", "HELLO WORLD!")
+writeLines(lines, file.path(path, "example.txt"))
+add(repo, "example.txt")
+commit_2 <- commit(repo, "Another commit message")
+
+## Create a branch with the same name should fail
+try(branch_create(commit_2, name = "test-branch"), TRUE)
+
+## Force it
+branch_2 <- branch_create(commit_2, name = "test-branch", force = TRUE)
+} # }
+```
